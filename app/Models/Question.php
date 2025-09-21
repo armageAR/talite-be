@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Question extends Model
@@ -23,8 +24,10 @@ class Question extends Model
     ];
 
     /**
-     * Cast attributes to native types.
+     * Always eager load option count for question responses.
      */
+    protected $withCount = ['options'];
+
     protected $casts = [
         'order' => 'integer',
     ];
@@ -35,5 +38,13 @@ class Question extends Model
     public function play(): BelongsTo
     {
         return $this->belongsTo(Play::class);
+    }
+
+    /**
+     * A question exposes many selectable options.
+     */
+    public function options(): HasMany
+    {
+        return $this->hasMany(QuestionOption::class)->orderBy('order');
     }
 }

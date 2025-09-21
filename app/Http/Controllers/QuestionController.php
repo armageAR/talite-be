@@ -43,7 +43,7 @@ class QuestionController extends Controller
             'observations' => ['nullable', 'string', 'max:500'],
         ]);
 
-        $question = $play->questions()->create($data);
+        $question = $play->questions()->create($data)->loadCount('options');
 
         return response()->json($question, 201);
     }
@@ -77,7 +77,7 @@ class QuestionController extends Controller
 
         $question->update($data);
 
-        return response()->json($question->refresh());
+        return response()->json($question->refresh()->loadCount('options'));
     }
 
     /**
@@ -99,6 +99,6 @@ class QuestionController extends Controller
 
         $question->restore();
 
-        return response()->json($question->fresh());
+        return response()->json($question->fresh()->loadCount('options'));
     }
 }

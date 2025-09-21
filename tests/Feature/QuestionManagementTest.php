@@ -42,7 +42,8 @@ class QuestionManagementTest extends TestCase
             ->assertOk()
             ->assertJsonCount(3)
             ->assertJsonPath('0.order', 1)
-            ->assertJsonPath('1.order', 2);
+            ->assertJsonPath('1.order', 2)
+            ->assertJsonFragment(['options_count' => 0]);
     }
 
     public function test_index_can_include_soft_deleted_questions(): void
@@ -79,7 +80,8 @@ class QuestionManagementTest extends TestCase
         $response
             ->assertCreated()
             ->assertJsonFragment($payload)
-            ->assertJsonFragment(['play_id' => $play->id]);
+            ->assertJsonFragment(['play_id' => $play->id])
+            ->assertJsonFragment(['options_count' => 0]);
 
         $this->assertDatabaseHas('questions', array_merge($payload, ['play_id' => $play->id]));
 
@@ -117,6 +119,7 @@ class QuestionManagementTest extends TestCase
             ->assertJsonFragment([
                 'id' => $question->id,
                 'question' => $question->question,
+                'options_count' => 0,
             ]);
     }
 
@@ -135,7 +138,8 @@ class QuestionManagementTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonFragment($payload);
+            ->assertJsonFragment($payload)
+            ->assertJsonFragment(['options_count' => 0]);
 
         $this->assertDatabaseHas('questions', array_merge(['id' => $question->id], $payload));
     }
@@ -167,7 +171,10 @@ class QuestionManagementTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonFragment(['id' => $question->id]);
+            ->assertJsonFragment([
+                'id' => $question->id,
+                'options_count' => 0,
+            ]);
 
         $this->assertDatabaseHas('questions', [
             'id' => $question->id,
@@ -178,4 +185,3 @@ class QuestionManagementTest extends TestCase
         $playResponse->assertOk()->assertJsonFragment(['questions_count' => 1]);
     }
 }
-
