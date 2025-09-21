@@ -46,6 +46,19 @@ class QuestionManagementTest extends TestCase
             ->assertJsonFragment(['options_count' => 0]);
     }
 
+    public function test_guests_cannot_access_question_endpoints(): void
+    {
+        $play = Play::factory()->create();
+        $question = Question::factory()->create();
+
+        $this->getJson("/api/plays/{$play->id}/questions")->assertUnauthorized();
+        $this->postJson("/api/plays/{$play->id}/questions", [])->assertUnauthorized();
+        $this->getJson("/api/questions/{$question->id}")->assertUnauthorized();
+        $this->patchJson("/api/questions/{$question->id}", [])->assertUnauthorized();
+        $this->deleteJson("/api/questions/{$question->id}")->assertUnauthorized();
+        $this->patchJson("/api/questions/{$question->id}/restore")->assertUnauthorized();
+    }
+
     public function test_index_can_include_soft_deleted_questions(): void
     {
         $this->authenticate();

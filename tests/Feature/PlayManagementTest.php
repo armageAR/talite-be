@@ -34,6 +34,18 @@ class PlayManagementTest extends TestCase
             ->assertJsonFragment(['questions_count' => 0]);
     }
 
+    public function test_guests_cannot_access_play_endpoints(): void
+    {
+        $play = Play::factory()->create();
+
+        $this->getJson('/api/plays')->assertUnauthorized();
+        $this->getJson("/api/plays/{$play->id}")->assertUnauthorized();
+        $this->postJson('/api/plays', [])->assertUnauthorized();
+        $this->patchJson("/api/plays/{$play->id}", [])->assertUnauthorized();
+        $this->deleteJson("/api/plays/{$play->id}")->assertUnauthorized();
+        $this->patchJson("/api/plays/{$play->id}/restore")->assertUnauthorized();
+    }
+
     public function test_index_can_include_soft_deleted_records(): void
     {
         $this->authenticate();
