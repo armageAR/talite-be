@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PlayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', fn(Request $r) => $r->user());
     Route::post('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy']);
     // tus endpoints protegidos...
+    Route::apiResource('plays', PlayController::class);
+    Route::patch('plays/{play}/restore', [PlayController::class, 'restore'])->name('plays.restore');
 });
 
 // === AUTH PÚBLICO ===
