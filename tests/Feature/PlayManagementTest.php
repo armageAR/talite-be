@@ -28,7 +28,10 @@ class PlayManagementTest extends TestCase
 
         $response = $this->getJson('/api/plays');
 
-        $response->assertOk()->assertJsonCount(3);
+        $response
+            ->assertOk()
+            ->assertJsonCount(3)
+            ->assertJsonFragment(['questions_count' => 0]);
     }
 
     public function test_index_can_include_soft_deleted_records(): void
@@ -61,7 +64,8 @@ class PlayManagementTest extends TestCase
 
         $response
             ->assertCreated()
-            ->assertJsonFragment($payload);
+            ->assertJsonFragment($payload)
+            ->assertJsonFragment(['questions_count' => 0]);
 
         $this->assertDatabaseHas('plays', $payload);
     }
@@ -90,6 +94,7 @@ class PlayManagementTest extends TestCase
             ->assertJsonFragment([
                 'id' => $play->id,
                 'title' => $play->title,
+                'questions_count' => 0,
             ]);
     }
 
@@ -107,7 +112,8 @@ class PlayManagementTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonFragment($payload);
+            ->assertJsonFragment($payload)
+            ->assertJsonFragment(['questions_count' => 0]);
 
         $this->assertDatabaseHas('plays', array_merge(['id' => $play->id], $payload));
     }
@@ -144,4 +150,3 @@ class PlayManagementTest extends TestCase
         ]);
     }
 }
-

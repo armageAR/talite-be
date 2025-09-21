@@ -35,7 +35,7 @@ class PlayController extends Controller
             'description' => ['required', 'string', 'max:500'],
         ]);
 
-        $play = Play::create($data);
+        $play = Play::create($data)->loadCount('questions');
 
         return response()->json($play, 201);
     }
@@ -60,7 +60,7 @@ class PlayController extends Controller
 
         $play->update($data);
 
-        return response()->json($play);
+        return response()->json($play->refresh()->loadCount('questions'));
     }
 
     /**
@@ -82,6 +82,6 @@ class PlayController extends Controller
 
         $play->restore();
 
-        return response()->json($play->fresh());
+        return response()->json($play->fresh()->loadCount('questions'));
     }
 }
