@@ -20,19 +20,28 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response
+            ->assertOk()
+            ->assertJsonFragment([
+                'message' => 'logged-in',
+            ]);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();
 
-        $this->post('/login', [
+        $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
+        $response
+            ->assertStatus(422)
+            ->assertJsonFragment([
+                'message' => 'Invalid credentials',
+            ]);
     }
 
     public function test_users_can_logout(): void
@@ -42,6 +51,10 @@ class AuthenticationTest extends TestCase
         $response = $this->actingAs($user)->post('/logout');
 
         $this->assertGuest();
-        $response->assertNoContent();
+        $response
+            ->assertOk()
+            ->assertJsonFragment([
+                'message' => 'logged-out',
+            ]);
     }
 }

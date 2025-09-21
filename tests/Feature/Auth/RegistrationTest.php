@@ -19,6 +19,10 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response
+            ->assertCreated()
+            ->assertJsonFragment([
+                'message' => 'registered',
+            ]);
     }
 }

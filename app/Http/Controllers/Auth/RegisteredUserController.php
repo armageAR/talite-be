@@ -32,6 +32,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        event(new Registered($user));
+
         // Opcional: auto-login post registro
         auth()->login($user);
         $request->session()->regenerate();
