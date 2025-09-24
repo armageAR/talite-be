@@ -13,9 +13,9 @@ class Play extends Model
     use SoftDeletes;
 
     /**
-     * Always eager load question count for responses.
+     * Always eager load aggregated counts for responses.
      */
-    protected $withCount = ['questions'];
+    protected $withCount = ['questions', 'performances'];
 
     /**
      * The attributes that are mass assignable.
@@ -31,5 +31,13 @@ class Play extends Model
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class)->orderBy('order');
+    }
+
+    /**
+     * A play schedules many performances.
+     */
+    public function performances(): HasMany
+    {
+        return $this->hasMany(Performance::class)->orderBy('scheduled_at');
     }
 }
