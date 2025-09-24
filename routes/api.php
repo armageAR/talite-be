@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PlayController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionOptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('plays/{play}/restore', [PlayController::class, 'restore'])->name('plays.restore');
     Route::apiResource('plays.questions', QuestionController::class)->shallow();
     Route::patch('questions/{question}/restore', [QuestionController::class, 'restore'])->name('questions.restore');
+    Route::apiResource('questions.options', QuestionOptionController::class)->shallow();
+    Route::patch('options/{option}/restore', [QuestionOptionController::class, 'restore'])->name('options.restore');
 });
 
 // === AUTH PÚBLICO ===
